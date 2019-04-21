@@ -1,0 +1,23 @@
+[user]
+    email = kupriyanovkirill@gmail.com
+    name = Kirill
+
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    df = diff
+    p  = push
+    a  = add
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    type = cat-file -t
+    dump = cat-file -p
+    graph = log --decorate --all --graph
+    l = log --decorate --all --graph
+
+
+# EOF
+
+
+
