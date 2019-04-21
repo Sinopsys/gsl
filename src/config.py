@@ -51,7 +51,14 @@ class CongifValidateError(LoadConfigError):
     pass
 
 
-def load(path: str):
+def load(path: str) -> dict:
+    """
+    Load and parse config file
+    : param path : str
+        Path to a config file
+    : return : dict
+        Loaded and parsed config
+    """
     __logger__.info(f'Loading config from {path}')
     config = _read_(path)
     if not config:
@@ -60,9 +67,13 @@ def load(path: str):
     return config
 
 
-def _read_(path: str) -> str:
+def _read_(path: str) -> dict:
     """
-
+    Reads config from path
+    : param path : str
+        Path to a config file
+    : return : dict
+        Read yaml config
     """
     config = {}
     if not os.path.exists(path):
