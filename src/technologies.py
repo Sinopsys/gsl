@@ -6,3 +6,32 @@ OPTIONS = {
                      'X11', 'X17', 'Lyra2rev2', 'myr-groestl', 'blake2s'],
         'random':  ['DRBG', 'CPRNG'],
 }
+
+LINKS = {
+    'Blockchain': 'See `src/example_chain.py` for a good classic blockchain implementation',
+    'DAG': 'https://github.com/thieman/py-dag',
+    'Hashgraph': 'https://github.com/Lapin0t/py-swirld',
+    'Holochain': 'https://github.com/holochain/holochain-rust',
+    'Tempo': 'https://github.com/radixdlt/radnet',
+    'Public': 'Depends on your implementation: https://masterthecrypto.com/public-vs-private-blockchain-whats-the-difference/',
+    'Private': 'Depends on your implementation: https://masterthecrypto.com/public-vs-private-blockchain-whats-the-difference/',
+    'PoW': 'https://github.com/csunny/py-bitcoin/blob/master/consensus/proof_of_work.py',
+    'PoS': 'https://github.com/csunny/blockchain',
+    'DPoS': 'https://github.com/DEADP0OL/DPoS-Slackbot',
+    'PoA': 'https://github.com/poanetwork/wiki/wiki/POA-Network-Whitepaper',
+    'PoWeight': 'Read https://filecoin.io/filecoin.pdf',
+    'BFT': 'https://github.com/practicalbft/BFTList-client/tree/master/client',
+    'SHA-256': 'https://github.com/thomdixon/pysha2/blob/master/sha2/sha256.py',
+    'SHA-512': 'https://github.com/thomdixon/pysha2/blob/master/sha2/sha512.py',
+    'Scrypt': 'https://github.com/ricmoo/pyscrypt',
+    'KECCAK-256': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
+    'Ethash': 'https://github.com/ethereum/ethash',
+    'X11': 'https://pypi.org/project/x11_hash/',
+    'X17': 'https://pypi.org/project/x17_hash/',
+    'Lyra2rev2': 'https://github.com/straks/lyra2re-hash-python',
+    'myr-groestl': 'https://github.com/vergecurrency/myr-groestl_hash',
+    'blake2s': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
+    'DRBG': 'https://github.com/blubber/python-drbg/blob/master/drbg.py',
+    'CPRNG': 'https://riptutorial.com/python/example/3857/create-cryptographically-secure-random-numbers',
+}
+

@@ -24,20 +24,15 @@ import os
 import yaml
 import logging.config
 import config
+import time
 
 from technologies import OPTIONS
+from technologies import LINKS
 from utils.log import LOG_CONFIG
 from utils.output import print_nested
 
 LOGGING = logging.config.dictConfig(LOG_CONFIG)
 __logger__ = logging.getLogger('stdout')
-
-
-class Krinkle(object):
-    """
-    Helps to choose a ledger
-    """
-    pass
 
 
 class ChooseError(Exception):
@@ -47,7 +42,10 @@ class ChooseError(Exception):
     pass
 
 
-class Jarquai(object):
+class Krinkle(object):
+    """
+    Helps to choose a ledger
+    """
     def __init__(self, config_path: str):
         self.config_path = config_path
         self.config = self.load_config()
@@ -56,7 +54,7 @@ class Jarquai(object):
     def load_config(self) -> dict:
         return config.load(self.config_path)
 
-    def prompt(self):
+    def prompt(self) -> dict:
         for k, v in OPTIONS.items():
             print(f'\nChoose type of {k} of the ledger')
             if isinstance(v, list):
@@ -73,20 +71,47 @@ class Jarquai(object):
                     return
             else:
                 print(v)
-        print('\n\nThe following config is to be set:')
+        print('\n\nThe following config is to be set:\n')
+        chosen_to_print = {}
         for k, v in OPTIONS.items():
-            print(f'{k}: {v[self.ledger_config[k]]}')
+            chosen_to_print[k] = v[self.ledger_config[k]]
+        print_nested(chosen_to_print, 1)
         if input('\nProceed with this config? [YES]/NO:').lower() in ['', 'yes', 'y', 'ye']:
-            return
+            return chosen_to_print
         else:
             self.prompt()
+
+
+class Jarquai(object):
+    """
+    This helps in building corresponding to a selected structure ledger
+    ________________________
+    ATTENTION, ALPHA VERSION
+    Gives links to implemented parts, not uniting them in an actually
+    working ledger
+    """
+    def __init__(self, options):
+        self.selected_options = options
+
+    def build_ledger(self):
+        return self.match_links()
+
+    def match_links(self):
+        res = {}
+        for k, v in self.selected_options.items():
+            res[v] = LINKS[v]
+        print_nested(res, 1)
 
 
 def main() -> None:
     __logger__.info('Start Goodsteel Ledger: a program for generating distributed ledgers')
     config_path = 'config.yaml'
-    jq = Jarquai(config_path)
-    jq.prompt()
+    kr = Krinkle(config_path)
+    options = kr.prompt()
+    __logger__.info('Start getting your ledger\'s algorithms')
+    time.sleep(2)
+    jq = Jarquai(options)
+    jq.build_ledger()
 
 
 if __name__ == '__main__':
