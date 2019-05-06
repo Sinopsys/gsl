@@ -30,6 +30,8 @@ from technologies import OPTIONS
 from technologies import LINKS
 from utils.log import LOG_CONFIG
 from utils.output import print_nested
+from algorithms.random.cprng import random as cprng
+
 
 LOGGING = logging.config.dictConfig(LOG_CONFIG)
 __logger__ = logging.getLogger('stdout')
