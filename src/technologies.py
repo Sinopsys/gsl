@@ -5,6 +5,7 @@ OPTIONS = {
         'hashing':  ['SHA-256', 'SHA-512', 'Scrypt', 'KECCAK-256', 'Ethash',
                      'X11', 'X17', 'Lyra2rev2', 'myr-groestl', 'blake2s'],
         'random':  ['DRBG', 'CPRNG'],
+        'digital signature':  ['ECDSA', 'DSA', 'elgamal', 'GOST R 34.10-2012'],
 }
 
 LINKS = {
@@ -33,5 +34,9 @@ LINKS = {
     'blake2s': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
     'DRBG': 'https://github.com/blubber/python-drbg/blob/master/drbg.py',
     'CPRNG': 'https://riptutorial.com/python/example/3857/create-cryptographically-secure-random-numbers',
+    'ECDSA': 'https://github.com/warner/python-ecdsa',
+    'DSA': 'https://github.com/rrottmann/pydsa',
+    'elgamal': 'https://github.com/RyanRiddle/elgamal',
+    'GOST R 34.10-2012': 'https://pypi.org/project/pygost/',
 }
 
