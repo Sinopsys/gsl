@@ -1,24 +1,24 @@
-[submodule "src/algorithms/hashing/pysha2"]
-	path = src/algorithms/hashing/pysha2
-	url = https://github.com/thomdixon/pysha2
-[submodule "src/algorithms/hashing/pyscrypt"]
-	path = src/algorithms/hashing/pyscrypt
-	url = https://github.com/ricmoo/pyscrypt
-[submodule "src/algorithms/random/python-drbg"]
-	path = src/algorithms/random/python-drbg
-	url = https://github.com/blubber/python-drbg
-[submodule "src/algorithms/hashing/pycryptodome"]
-	path = src/algorithms/hashing/pycryptodome
-	url = https://github.com/Legrandin/pycryptodome
-[submodule "src/algorithms/hashing/myr-groestl_hash"]
-	path = src/algorithms/hashing/myr-groestl_hash
-	url = https://github.com/vergecurrency/myr-groestl_hash
-[submodule "src/algorithms/hashing/lyra2re-hash-python"]
-	path = src/algorithms/hashing/lyra2re-hash-python
-	url = https://github.com/straks/lyra2re-hash-python
-[submodule "src/algorithms/hashing/ethash"]
-	path = src/algorithms/hashing/ethash
-	url = https://github.com/ethereum/ethash
-[submodule "src/algorithms/hashing/keccak"]
-	path = src/algorithms/hashing/keccak
-	url = https://github.com/ctz/keccak
+; [submodule "src/algorithms/hashing/pysha2"]
+; 	path = src/algorithms/hashing/pysha2
+; 	url = https://github.com/thomdixon/pysha2
+; [submodule "src/algorithms/hashing/pyscrypt"]
+; 	path = src/algorithms/hashing/pyscrypt
+; 	url = https://github.com/ricmoo/pyscrypt
+; [submodule "src/algorithms/random/python-drbg"]
+; 	path = src/algorithms/random/python-drbg
+; 	url = https://github.com/blubber/python-drbg
+; [submodule "src/algorithms/hashing/pycryptodome"]
+; 	path = src/algorithms/hashing/pycryptodome
+; 	url = https://github.com/Legrandin/pycryptodome
+; [submodule "src/algorithms/hashing/myr-groestl_hash"]
+; 	path = src/algorithms/hashing/myr-groestl_hash
+; 	url = https://github.com/vergecurrency/myr-groestl_hash
+; [submodule "src/algorithms/hashing/lyra2re-hash-python"]
+; 	path = src/algorithms/hashing/lyra2re-hash-python
+; 	url = https://github.com/straks/lyra2re-hash-python
+; [submodule "src/algorithms/hashing/ethash"]
+; 	path = src/algorithms/hashing/ethash
+; 	url = https://github.com/ethereum/ethash
+; [submodule "src/algorithms/hashing/keccak"]
+; 	path = src/algorithms/hashing/keccak
+; 	url = https://github.com/ctz/keccak
