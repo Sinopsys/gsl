@@ -4,7 +4,7 @@ OPTIONS = {
         'consensus':  ['PoW', 'PoS', 'DPoS', 'PoA', 'PoWeight', 'BFT'],
         'hashing':  ['SHA-256', 'SHA-512', 'Scrypt', 'KECCAK-256',
                      'KECCAK-512', 'Ethash', 'X11', 'X17', 'myr-groestl',
-                     'Lyra2rev2', 'blake2s'],
+                     'Lyra2rev2', 'blake2s', 'blake2b'],
         'random':  ['DRBG', 'CPRNG'],
         'digital signature':  ['ECDSA', 'DSA', 'elgamal', 'GOST R 34.10-2012'],
 }
@@ -34,6 +34,7 @@ LINKS = {
     'Lyra2rev2': 'https://github.com/straks/lyra2re-hash-python',
     'myr-groestl': 'https://github.com/vergecurrency/myr-groestl_hash',
     'blake2s': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
+    'blake2b': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
     'DRBG': 'https://github.com/blubber/python-drbg/blob/master/drbg.py',
     'CPRNG': 'https://riptutorial.com/python/example/3857/create-cryptographically-secure-random-numbers',
     'ECDSA': 'https://github.com/warner/python-ecdsa',
@@ -52,10 +53,13 @@ TOINSTALL = {
     'Lyra2rev2': 'algoritms/hashing/lyra2re-hash-python',
     'myr-groestl': 'algoritms/hashing/myr-groestl_hash',
     'blake2s': 'algoritms/hashing/pycryptodome',
+    'blake2b': 'algoritms/hashing/pycryptodome',
+    'X11': 'algoritms/hashing/x11_hash',
+    'X17': '.x17_hash',
     'ECDSA': 'algoritms/digital_signature/ecdsa',
     'elgamal': 'algoritms/digital_signature/elgamal',
     'GOST R 34.10-2012': 'algoritms/digital_signature/pygost',
-    'PoW': '',
+    'PoW': 'skip',
 }
 
 INTERFACES = {
@@ -67,9 +71,12 @@ INTERFACES = {
     'KECCAK-512': 'algoritms/hashing/__interfaces/keccak512',
     'Lyra2rev2': 'algoritms/hashing/__interfaces/lyra2re-hash-python',
     'myr-groestl': 'algoritms/hashing/__interfaces/myr-groestl_hash',
-    'blake2s': 'algoritms/hashing/__interfaces/pycryptodome',
+    'blake2s': 'algoritms/hashing/__interfaces/blake2s',
+    'blake2b': 'algoritms/hashing/__interfaces/blake2b',
     'ECDSA': 'algoritms/digital_signature/__interfaces/ecdsa',
     'elgamal': 'algoritms/digital_signature/__interfaces/elgamal',
     'GOST R 34.10-2012': 'algoritms/digital_signature/__interfaces/pygost',
+    'X11': 'algoritms/hashing/__interfaces/x11',
+    'X17': 'algoritms/hashing/__interfaces/x17',
     'PoW': '',
 }

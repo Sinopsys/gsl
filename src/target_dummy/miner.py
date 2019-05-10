@@ -157,12 +157,20 @@ def mine(a, blockchain, node_pending_transactions):
             mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
             BLOCKCHAIN.append(mined_block)
             # Let the client know this node mined a block
-            print(json.dumps({
-              "index": new_block_index,
-              "timestamp": str(new_block_timestamp),
-              "data": new_block_data,
-              "hash": last_block_hash.decode()
-            }) + "\n")
+            try:
+                print(json.dumps({
+                  "index": new_block_index,
+                  "timestamp": str(new_block_timestamp),
+                  "data": new_block_data,
+                  "hash": last_block_hash.decode()
+                }) + "\n")
+            except:
+                print(json.dumps({
+                  "index": new_block_index,
+                  "timestamp": str(new_block_timestamp),
+                  "data": new_block_data,
+                  "hash": last_block_hash
+                }) + "\n")
             a.send(BLOCKCHAIN)
             requests.get(MINER_NODE_URL + "/blocks?update=" + MINER_ADDRESS)
 
@@ -219,12 +227,20 @@ def get_blocks():
     # Converts our blocks into dictionaries so we can send them as json objects later
     chain_to_send_json = []
     for block in chain_to_send:
-        block = {
-            "index": str(block.index),
-            "timestamp": str(block.timestamp),
-            "data": str(block.data),
-            "hash": block.hash.decode()
-        }
+        try:
+            block = {
+                "index": str(block.index),
+                "timestamp": str(block.timestamp),
+                "data": str(block.data),
+                "hash": block.hash.decode()
+            }
+        except:
+            block = {
+                "index": str(block.index),
+                "timestamp": str(block.timestamp),
+                "data": str(block.data),
+                "hash": block.hash
+            }
         chain_to_send_json.append(block)
 
     # Send our chain to whomever requested it
