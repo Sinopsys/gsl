@@ -2,8 +2,9 @@ OPTIONS = {
         'structure':  ['Blockchain', 'DAG', 'Hashgraph', 'Holochain', 'Tempo'],
         'openess':  ['Public', 'Private'],
         'consensus':  ['PoW', 'PoS', 'DPoS', 'PoA', 'PoWeight', 'BFT'],
-        'hashing':  ['SHA-256', 'SHA-512', 'Scrypt', 'KECCAK-256', 'Ethash',
-                     'X11', 'X17', 'Lyra2rev2', 'myr-groestl', 'blake2s'],
+        'hashing':  ['SHA-256', 'SHA-512', 'Scrypt', 'KECCAK-256',
+                     'KECCAK-512', 'Ethash', 'X11', 'X17', 'myr-groestl',
+                     'Lyra2rev2', 'blake2s'],
         'random':  ['DRBG', 'CPRNG'],
         'digital signature':  ['ECDSA', 'DSA', 'elgamal', 'GOST R 34.10-2012'],
 }
@@ -26,6 +27,7 @@ LINKS = {
     'SHA-512': 'https://github.com/thomdixon/pysha2/blob/master/sha2/sha512.py',
     'Scrypt': 'https://github.com/ricmoo/pyscrypt',
     'KECCAK-256': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
+    'KECCAK-512': 'https://pycryptodome.readthedocs.io/en/latest/src/hash/hash.html',
     'Ethash': 'https://github.com/ethereum/ethash',
     'X11': 'https://pypi.org/project/x11_hash/',
     'X17': 'https://pypi.org/project/x17_hash/',
@@ -40,3 +42,34 @@ LINKS = {
     'GOST R 34.10-2012': 'https://pypi.org/project/pygost/',
 }
 
+TOINSTALL = {
+    'SHA-256': 'algoritms/hashing/sha256',
+    'SHA-512': 'algoritms/hashing/sha512',
+    'Scrypt': 'algoritms/hashing/pyscrypt',
+    'Ethash': 'algoritms/hashing/ethash',
+    'KECCAK-256': 'algoritms/hashing/keccak',
+    'KECCAK-512': 'algoritms/hashing/keccak',
+    'Lyra2rev2': 'algoritms/hashing/lyra2re-hash-python',
+    'myr-groestl': 'algoritms/hashing/myr-groestl_hash',
+    'blake2s': 'algoritms/hashing/pycryptodome',
+    'ECDSA': 'algoritms/digital_signature/ecdsa',
+    'elgamal': 'algoritms/digital_signature/elgamal',
+    'GOST R 34.10-2012': 'algoritms/digital_signature/pygost',
+    'PoW': '',
+}
+
+INTERFACES = {
+    'SHA-256': 'algoritms/hashing/__interfaces/sha256',
+    'SHA-512': 'algoritms/hashing/__interfaces/sha512',
+    'Scrypt': 'algoritms/hashing/__interfaces/pyscrypt',
+    'Ethash': 'algoritms/hashing/__interfaces/ethash',
+    'KECCAK-256': 'algoritms/hashing/__interfaces/keccak256',
+    'KECCAK-512': 'algoritms/hashing/__interfaces/keccak512',
+    'Lyra2rev2': 'algoritms/hashing/__interfaces/lyra2re-hash-python',
+    'myr-groestl': 'algoritms/hashing/__interfaces/myr-groestl_hash',
+    'blake2s': 'algoritms/hashing/__interfaces/pycryptodome',
+    'ECDSA': 'algoritms/digital_signature/__interfaces/ecdsa',
+    'elgamal': 'algoritms/digital_signature/__interfaces/elgamal',
+    'GOST R 34.10-2012': 'algoritms/digital_signature/__interfaces/pygost',
+    'PoW': '',
+}

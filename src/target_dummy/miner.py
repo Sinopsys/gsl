@@ -5,10 +5,13 @@ import requests
 import base64
 from flask import Flask, request
 from multiprocessing import Process, Pipe
-import ecdsa
+try:
+    import ecdsa
+except:
+    pass
 
 try:
-    import myhashing
+    from myhashing import myhashing
     hashing = myhashing
 except:
     hashing = hashlib.sha256
@@ -158,7 +161,7 @@ def mine(a, blockchain, node_pending_transactions):
               "index": new_block_index,
               "timestamp": str(new_block_timestamp),
               "data": new_block_data,
-              "hash": last_block_hash
+              "hash": last_block_hash.decode()
             }) + "\n")
             a.send(BLOCKCHAIN)
             requests.get(MINER_NODE_URL + "/blocks?update=" + MINER_ADDRESS)
@@ -220,7 +223,7 @@ def get_blocks():
             "index": str(block.index),
             "timestamp": str(block.timestamp),
             "data": str(block.data),
-            "hash": block.hash
+            "hash": block.hash.decode()
         }
         chain_to_send_json.append(block)
 

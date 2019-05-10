@@ -21,7 +21,10 @@ node_pending_transactions list to avoid it get processed more than 1 time.
 import requests
 import time
 import base64
-import ecdsa
+try:
+    import ecdsa
+except:
+    pass
 
 
 def wallet():

@@ -25,10 +25,12 @@ class ASCIIColors:
     """
         Class container for save ASCII
     """
-    ENDS = "\033[0m"
-    LIGHT_CYAN = "\033[96m"
-    YELLOW = "\033[33m"
-    WHITE = "\033[97m"
+    ENDS = '\033[0m'
+    LIGHT_CYAN = '\033[96m'
+    YELLOW = '\033[33m'
+    WHITE = '\033[97m'
+    BACK_LIGHT_BLUE = '\033[104m'
+    BACK_BLUE = '\033[44m'
 
 
 class NestedPrint:

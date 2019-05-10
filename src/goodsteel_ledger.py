@@ -30,9 +30,11 @@ import config
 from prolific_writer import ProlificWriter
 from technologies import OPTIONS
 from technologies import LINKS
+from technologies import TOINSTALL
 from utils.log import LOG_CONFIG
 from utils.misc import get_version
 from utils.output import print_nested
+from utils.output import ASCIIColors
 
 
 DEFAULT_CONFIG_PATH = '/etc/gsl/config.yaml'
@@ -71,7 +73,7 @@ class Krinkle(object):
     def print_description(self, name, path):
         print(f'''
                 =============================================
-                ==============INITIALISE LEDGER==============
+                ==============INITIALIZE LEDGER==============
                 =============================================
 
                 Name: {name}
@@ -81,6 +83,8 @@ class Krinkle(object):
                 ==============MAKE YOUR CHOISES==============
                 =============================================
                '''.format(name=name, path=path))
+        print(f'{ASCIIColors.BACK_LIGHT_BLUE}THIS color indicates you will be provided with code and documentation for a particular algorithm{ASCIIColors.ENDS}')
+        print(f'{ASCIIColors.BACK_BLUE}THIS color indicates that GSL will generate a working code for your ledger using a particular algorithm{ASCIIColors.ENDS}')
 
     def prompt(self, name, path) -> dict:
         """
@@ -107,7 +111,14 @@ class Krinkle(object):
             print(f'\nChoose type of {k} of the ledger')
             if isinstance(v, list):
                 for num, opt in enumerate(v):
-                    print(f'{num+1}: {opt}', end='\n')
+                    if 'hash' in k or 'digital' in k or 'consen' in k:
+                        if opt in TOINSTALL:
+                            prefix = ASCIIColors.BACK_BLUE
+                        else:
+                            prefix = ASCIIColors.BACK_LIGHT_BLUE
+                    else:
+                        prefix = ASCIIColors.ENDS
+                    print(f'{prefix}{num+1}: {opt}{ASCIIColors.ENDS}', end='\n')
                 try:
                     n = input(f'Enter num from 1 to {len(v)}, default [1]: ')
                     n = 0 if n == '' else int(n) - 1
