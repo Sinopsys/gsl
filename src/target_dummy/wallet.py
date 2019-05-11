@@ -21,10 +21,13 @@ node_pending_transactions list to avoid it get processed more than 1 time.
 import requests
 import time
 import base64
+
 try:
-    import ecdsa
+    import mydss
+    dss = mydss
 except:
-    pass
+    import ecdsa
+    dss = ecdsa
 
 
 def wallet():
@@ -62,13 +65,13 @@ def send_transaction(addr_from, private_key, addr_to, amount):
     having a longer chain. So make sure your transaction is deep into the chain
     before claiming it as approved!
     """
-    # For fast debugging REMOVE LATER
-    # private_key="181f2448fa4636315032e15bb9cbc3053e10ed062ab0b2680a37cd8cb51f53f2"
-    # amount="3000"
-    # addr_from="SD5IZAuFixM3PTmkm5ShvLm1tbDNOmVlG7tg6F5r7VHxPNWkNKbzZfa+JdKmfBAIhWs9UKnQLOOL1U+R3WxcsQ=="
-    # addr_to="SD5IZAuFixM3PTmkm5ShvLm1tbDNOmVlG7tg6F5r7VHxPNWkNKbzZfa+JdKmfBAIhWs9UKnQLOOL1U+R3WxcsQ=="
+     # For fast debugging REMOVE LATER
+     # private_key="181f2448fa4636315032e15bb9cbc3053e10ed062ab0b2680a37cd8cb51f53f2"
+     # amount="3000"
+     # addr_from="SD5IZAuFixM3PTmkm5ShvLm1tbDNOmVlG7tg6F5r7VHxPNWkNKbzZfa+JdKmfBAIhWs9UKnQLOOL1U+R3WxcsQ=="
+     # addr_to="SD5IZAuFixM3PTmkm5ShvLm1tbDNOmVlG7tg6F5r7VHxPNWkNKbzZfa+JdKmfBAIhWs9UKnQLOOL1U+R3WxcsQ=="
 
-    if len(private_key) == 64:
+    if len(private_key) == 64 or dss.name == 'gost':
         signature, message = sign_ECDSA_msg(private_key)
         url = 'http://localhost:5000/txion'
         payload = {"from": addr_from,
@@ -100,11 +103,38 @@ def generate_ECDSA_keys():
     private_key: str
     public_ley: base64 (to make it shorter)
     """
-    sk = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1) #this is your sign (private key)
-    private_key = sk.to_string().hex() #convert your private key to hex
-    vk = sk.get_verifying_key() #this is your verification key (public key)
-    public_key = vk.to_string().hex()
-    #we are going to encode the public key to make it shorter
+    try:
+        sk = dss.SigningKey.generate(curve=dss.SECP256k1)   # this is your sign (private key)
+    except:
+        sk = dss.SigningKey().generate()   # this is your sign (private key)
+
+    print('\n\n\n<>GENERATING\n\n\n')
+    print('sk', sk)
+    try:
+        print('ecdsa.SECP256k1', dss.SECP256k1)
+    except:
+        pass
+    print('\n\n\n</>GENERATING\n\n\n')
+
+    try:
+        private_key = sk.to_string().hex()  # convert your private key to hex
+    except:
+        private_key = sk.to_string()  # convert your private key to hex
+
+    print('\n\n\n<>GENERATING\n\n\n')
+    print('private_key ', private_key)
+    print('\n\n\n</>GENERATING\n\n\n')
+
+    vk = sk.get_verifying_key()  # this is your verification key (public key)
+    try:
+        public_key = vk.to_string().hex()
+    except:
+        public_key = sk.to_string(pub=True)
+
+    print('\n\n\n<>GENERATING\n\n\n')
+    print('public_key ', base64.b64encode(bytes.fromhex(public_key)).decode())
+    print('\n\n\n</>GENERATING\n\n\n')
+    # we are going to encode the public key to make it shorter
     public_key = base64.b64encode(bytes.fromhex(public_key))
 
     filename = input("Write the name of your new address: ") + ".txt"
@@ -123,8 +153,22 @@ def sign_ECDSA_msg(private_key):
     # Get timestamp, round it, make it into a string and encode it to bytes
     message = str(round(time.time()))
     bmessage = message.encode()
-    sk = ecdsa.SigningKey.from_string(bytes.fromhex(private_key), curve=ecdsa.SECP256k1)
-    signature = base64.b64encode(sk.sign(bmessage))
+    try:
+        sk = dss.SigningKey.from_string(bytes.fromhex(private_key), curve=dss.SECP256k1)
+    except:
+        sk = dss.SigningKey().from_string(str(private_key))
+
+    print('\n\n\n<>SIGNING\n\n\n')
+    print('sk ', sk)
+    print('\n\n\n</>SIGNING\n\n\n')
+
+    signed = sk.sign(bmessage)
+    signature = base64.b64encode(signed)
+
+    print('\n\n\n<>SIGNING\n\n\n')
+    print('signed ', signed)
+    print('\n\n\n</>SIGNING\n\n\n')
+
     return signature, message
 
 

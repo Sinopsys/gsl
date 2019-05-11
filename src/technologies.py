@@ -6,7 +6,7 @@ OPTIONS = {
                      'KECCAK-512', 'Ethash', 'X11', 'X17', 'myr-groestl',
                      'Lyra2rev2', 'blake2s', 'blake2b'],
         'random':  ['DRBG', 'CPRNG'],
-        'digital signature':  ['ECDSA', 'DSA', 'elgamal', 'GOST R 34.10-2012'],
+        'digital signature':  ['ECDSA', 'DSA', 'elgamal128', 'elgamal256', 'GOST R 34.10-2012'],
 }
 
 LINKS = {
@@ -39,7 +39,8 @@ LINKS = {
     'CPRNG': 'https://riptutorial.com/python/example/3857/create-cryptographically-secure-random-numbers',
     'ECDSA': 'https://github.com/warner/python-ecdsa',
     'DSA': 'https://github.com/rrottmann/pydsa',
-    'elgamal': 'https://github.com/RyanRiddle/elgamal',
+    'elgamal128': 'https://github.com/RyanRiddle/elgamal',
+    'elgamal256': 'https://github.com/RyanRiddle/elgamal',
     'GOST R 34.10-2012': 'https://pypi.org/project/pygost/',
 }
 
@@ -57,7 +58,8 @@ TOINSTALL = {
     'X11': 'algoritms/hashing/x11_hash',
     'X17': '.x17_hash',
     'ECDSA': 'algoritms/digital_signature/ecdsa',
-    'elgamal': 'algoritms/digital_signature/elgamal',
+    'elgamal128': 'algoritms/digital_signature/elgamal',
+    'elgamal256': 'algoritms/digital_signature/elgamal',
     'GOST R 34.10-2012': 'algoritms/digital_signature/pygost',
     'PoW': 'skip',
 }
@@ -73,9 +75,10 @@ INTERFACES = {
     'myr-groestl': 'algoritms/hashing/__interfaces/myr-groestl_hash',
     'blake2s': 'algoritms/hashing/__interfaces/blake2s',
     'blake2b': 'algoritms/hashing/__interfaces/blake2b',
-    # 'ECDSA': 'algoritms/digital_signature/__interfaces/ecdsa',
-    # 'elgamal': 'algoritms/digital_signature/__interfaces/elgamal',
-    # 'GOST R 34.10-2012': 'algoritms/digital_signature/__interfaces/pygost',
+    'ECDSA': 'algoritms/digital_signature/__interfaces/ecdsa',
+    'elgamal128': 'algoritms/digital_signature/__interfaces/elgamal128',
+    'elgamal256': 'algoritms/digital_signature/__interfaces/elgamal256',
+    'GOST R 34.10-2012': 'algoritms/digital_signature/__interfaces/pygost',
     'X11': 'algoritms/hashing/__interfaces/x11',
     'X17': 'algoritms/hashing/__interfaces/x17',
     # 'PoW': '',

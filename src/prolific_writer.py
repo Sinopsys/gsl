@@ -77,10 +77,16 @@ class ProlificWriter(object):
 
     def _write_digital_signature_(self):
         pass
-        # src_path = self._get_src_path_()
-        # path = os.path.join(src_path, TOINSTALL[self.opts['digital signature']])
-        # print(path)
-        # self._install_(path)
+        # INSTALLING PROCEDURE
+        src_path = self._get_src_path_()
+        path = os.path.join(src_path, TOINSTALL[self.opts['digital signature']])
+        self._install_(path)
+
+        # WRITING PROCEDURE
+        name = 'mydss.py'
+        type_ = self.opts['digital signature']
+        path = os.path.join(src_path, INTERFACES[type_], name)
+        copyfile(path, os.path.join(self.path, name))
 
 
 # EOF

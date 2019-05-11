@@ -6,9 +6,11 @@ import base64
 from flask import Flask, request
 from multiprocessing import Process, Pipe
 try:
-    import ecdsa
+    import mydss
+    dss = mydss
 except:
-    pass
+    import ecdsa
+    dss = ecdsa
 
 try:
     from myhashing import myhashing
@@ -283,9 +285,27 @@ def validate_signature(public_key, signature, message):
     it's you (and not someone else) trying to do a transaction with your
     address. Called when a user tries to submit a new transaction.
     """
-    public_key = (base64.b64decode(public_key)).hex()
+    if dss.name == 'gost':
+        public_key = base64.b64decode(public_key)
+    else:
+        public_key = (base64.b64decode(public_key)).hex()
     signature = base64.b64decode(signature)
-    vk = ecdsa.VerifyingKey.from_string(bytes.fromhex(public_key), curve=ecdsa.SECP256k1)
+    try:
+        vk = dss.VerifyingKey.from_string(bytes.fromhex(public_key), curve=dss.SECP256k1)
+    except:
+        # print('needed')
+        # print(public_key, signature, message)
+        # print('needed')
+        vk = dss.VerifyingKey().from_string(public_key)
+
+#     print('\n\n\n<>VALIDATING\n\n\n')
+#     print('verigying key ', vk)
+#     print('\n\n\n</>VALIDATING\n\n\n')
+
+#     print('\n\n\n<>VALIDATING\n\n\n')
+#     print('message ', message, '\nencoded: ', message.encode())
+#     print('signature ', signature)
+#     print('\n\n\n</>VALIDATING\n\n\n')
     # Try changing into an if/else statement as except is too broad.
     try:
         return vk.verify(signature, message.encode())
