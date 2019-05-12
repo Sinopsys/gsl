@@ -15,16 +15,17 @@ from target_dummy import miner
 
 
 class ProlificWriter(object):
-    def __init__(self, full_path, opts):
+    def __init__(self, full_path, opts, timed, profd=False):
         self.path = full_path
         self.opts = opts
+        self.timed = timed
+        self.profd = profd
 
     def write(self):
         # WRITE ALGORITHMS ITSELF
         #
         self._write_hashing_()
         self._write_digital_signature_()
-        self._write_consensus_()
 
         self._write_(wallet)
         self._write_(miner)
@@ -34,6 +35,10 @@ class ProlificWriter(object):
         src_code = getsource(script_to_write)
         with open(os.path.join(self.path, name), 'w') as __fd__:
             __fd__.write(src_code)
+        if self.timed:
+            os.system('sed -ir "0,/def _timed/{s/_timed = .*/_timed = True/}" ' + os.path.join(self.path, name))
+        if self.profd:
+            os.system('sed -ir "0,/def _profd/{s/_profd = .*/_profd = True/}" ' + os.path.join(self.path, name))
 
     def _get_src_path_(self):
         path = sys.path
@@ -71,9 +76,6 @@ class ProlificWriter(object):
         type_ = self.opts['hashing']
         path = os.path.join(src_path, INTERFACES[type_], name)
         copyfile(path, os.path.join(self.path, name))
-
-    def _write_consensus_(self):
-        pass
 
     def _write_digital_signature_(self):
         pass

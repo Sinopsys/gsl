@@ -111,7 +111,7 @@ class Krinkle(object):
             print(f'\nChoose type of {k} of the ledger')
             if isinstance(v, list):
                 for num, opt in enumerate(v):
-                    if 'hash' in k or 'digital' in k or 'consen' in k:
+                    if 'hash' in k or 'digital' in k:
                         if opt in TOINSTALL:
                             prefix = ASCIIColors.BACK_BLUE
                         else:
@@ -149,7 +149,7 @@ class Jarquai(object):
     Gives links to implemented parts, not uniting them in an actually
     working ledger
     """
-    def __init__(self, options: dict, name, path):
+    def __init__(self, options: dict, name, path, timed, profd=False):
         """
             : param options : dict
             Oprions, selected by a user
@@ -157,6 +157,8 @@ class Jarquai(object):
         self.selected_options = options
         self.name = name
         self.path = path
+        self.timed = timed
+        self.profd = profd
 
     def build_ledger(self):
         """
@@ -166,7 +168,7 @@ class Jarquai(object):
             os.mkdir(os.path.join(self.path, self.name))
         # Write code of ledger to path
         self.pw = ProlificWriter(os.path.join(self.path, self.name),
-                                 self.selected_options)
+                                 self.selected_options, self.timed, self.profd)
         self.pw.write()
         return self.match_links()
 
@@ -191,6 +193,8 @@ def arg_parser() -> object:
     parser.add_argument('--init', action='store_true')
     parser.add_argument('--name', action='store', dest='NAME', required=False)
     parser.add_argument('--path', action='store', dest='PATH', required=False)
+    parser.add_argument('--time', action='store', dest='TIME', required=False)
+    parser.add_argument('--profile-all', action='store', dest='PROFILE', required=False)
 
     return parser.parse_args()
 
@@ -200,8 +204,18 @@ def main() -> None:
     Main entry for program
     """
     args = arg_parser()
+
+    try:
+        from gsl_profiler import Profiler
+        if args.PROFILE.lower() == 'true':
+            profiler = Profiler()
+            profiler.measure_all_times(args.PATH)
+            return
+    except Exception as e:
+        __logger__.error(e)
+
     if not args.init:
-        __logger__.error('NOT initializing a ledger since `--init` argument was not provided.')
+        __logger__.warning('NOT initializing a ledger since `--init` argument was not provided.')
         sys.exit(1)
     __logger__.info('Start Goodsteel Ledger: a program for generating distributed ledgers')
     config_path = DEFAULT_CONFIG_PATH
@@ -209,7 +223,14 @@ def main() -> None:
     options = kr.prompt(name=args.NAME, path=args.PATH)
     __logger__.info('Start getting your ledger\'s algorithms')
     time.sleep(0.5)
-    jq = Jarquai(options, args.NAME, args.PATH)
+    try:
+        if args.TIME.lower() == 'true':
+            t = True
+        else:
+            t = False
+    except:
+        t = False
+    jq = Jarquai(options, args.NAME, args.PATH, t)
     jq.build_ledger()
 
 

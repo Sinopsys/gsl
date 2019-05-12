@@ -1,6 +1,8 @@
 from Crypto.Hash import BLAKE2s
 from binascii import hexlify
 
+name = 'blake2s'
+bit = '256'
 
 class myhashing:
     def __init__(self):

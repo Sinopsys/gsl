@@ -23,6 +23,7 @@ from pygost.gost3410 import verify
 # verify(curve, pub, dgst, signature, mode=2012)
 
 name = 'gost'
+bit = '256'
 
 class sk_:
     def __init__(self, prv, pub=0000):
@@ -47,20 +48,7 @@ class vk_:
         self.pub = pub
 
     def verify(self, signature, b_msg):
-        print('\n\n\n\n\n\n')
-        print('1, ', signature)
-        # signature = base64.b64decode(signature)
-        print('2, ', signature)
-        print('\n\nfuuuuckkkkk(1)!!\n\n')
-        # signature = base64.b64decode(signature)
         self.dgst = gost34112012256.new(b_msg).digest()
-        print('\n\nfuuuuckkkkk!!\n\n')
-        print(signature)
-        print(b_msg)
-        print(self.pub)
-        print(self.dgst)
-        print('\n\nfuuuuckkkkk!!\n\n')
-        print(verify(curve, self.pub, self.dgst, signature, mode=2012))
         return verify(curve, self.pub, self.dgst, signature, mode=2012)
 
 

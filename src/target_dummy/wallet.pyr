@@ -37,7 +37,6 @@ except:
 
 header_written = False
 _timed = False
-_profd = False
 
 def _write_time(alg, func, bit, etime):
     global header_written
@@ -123,7 +122,7 @@ def generate_ECDSA_keys():
     public_ley: base64 (to make it shorter)
     """
 
-    if _timed:
+    if _timed = False
         t1 = time.time()
 
     try:
@@ -143,7 +142,7 @@ def generate_ECDSA_keys():
         public_key = sk.to_string(pub=True)
 
 
-    if _timed:
+    if _timed = False
         t2 = time.time()
         _write_time(alg_name, 'Key pair generation', alg_bit, t2-t1)
 
@@ -172,7 +171,7 @@ def sign_ECDSA_msg(private_key):
     message = str(round(time.time()))
     bmessage = message.encode()
 
-    if _timed:
+    if _timed = False
         t1 = time.time()
 
     try:
@@ -181,7 +180,7 @@ def sign_ECDSA_msg(private_key):
         sk = dss.SigningKey().from_string(str(private_key))
     signed = sk.sign(bmessage)
     
-    if _timed:
+    if _timed = False
         t2 = time.time()
         _write_time(alg_name, 'Signing message', alg_bit, t2-t1)
 

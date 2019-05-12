@@ -1,6 +1,8 @@
 import groestl_hash
 from binascii import hexlify
 
+name = 'myr-groestl_hash'
+bit = '512'
 
 class myhashing:
     def __init__(self):

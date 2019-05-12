@@ -1,6 +1,8 @@
 import lyra2re2_hash
 from binascii import hexlify
 
+name = 'lyra2re2_hash'
+bit = '512'
 
 class myhashing:
     def __init__(self):

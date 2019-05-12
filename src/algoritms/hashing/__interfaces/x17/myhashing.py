@@ -1,6 +1,8 @@
 import x17_hash
 from binascii import hexlify
 
+name = 'x17'
+bit = '512'
 
 class myhashing:
     def __init__(self):

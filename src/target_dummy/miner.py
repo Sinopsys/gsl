@@ -1,3 +1,4 @@
+import os
 import time
 import hashlib
 import json
@@ -8,16 +9,23 @@ from multiprocessing import Process, Pipe
 try:
     import mydss
     dss = mydss
+    alg_name = dss.name
+    alg_bit = dss.bit
 except:
     import ecdsa
     dss = ecdsa
+    alg_name = 'ecdsa'
+    alg_bit = '256'
 
 try:
     from myhashing import myhashing
     hashing = myhashing
+    hash_name = hashing.name
+    hash_bit = hashing.bit
 except:
     hashing = hashlib.sha256
-
+    hash_name = 'sha256'
+    hash_bit = '256'
 
 # from atiesh import generated_spells
 
@@ -40,6 +48,21 @@ PEER_NODES = []
 ##============================
 
 node = Flask(__name__)
+
+header_written = False
+
+_timed = False
+_profd = False
+
+
+def _write_time(alg, func, bit, etime):
+    global header_written
+    if not os.path.exists('time.csv') or (not header_written and not os.path.getsize('time.csv') > 0):
+        with open('time.csv', 'a') as __fd__:
+            __fd__.write('alg;func;bit;time\n')
+            header_written = True
+    with open('time.csv', 'a') as __fd__:
+        __fd__.write(f'{alg};{func};{bit};{etime}\n')
 
 
 class Block:
@@ -69,9 +92,15 @@ class Block:
 
     def hash_block(self):
         """Creates the unique hash for the block. It uses sha256 or given hashing algorithm."""
+        if _timed:
+            t1 = time.time()
         hasher = hashing()
         hasher.update((str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)).encode('utf-8'))
-        return hasher.hexdigest()
+        hexxx = hasher.hexdigest()
+        if _timed:
+            t2 = time.time()
+            _write_time(hash_name, 'Hash value computing', hash_bit, t2-t1)
+        return hexxx
 
 
 def create_genesis_block():
@@ -96,6 +125,8 @@ NODE_PENDING_TRANSACTIONS = []
 
 
 def proof_of_work(last_proof, blockchain):
+    if _timed:
+        t1 = time.time()
     # Creates a variable that we will use to find our next proof of work
     incrementer = last_proof + 1
     # Keep incrementing the incrementer until it's equal to a number divisible by 9
@@ -111,6 +142,9 @@ def proof_of_work(last_proof, blockchain):
                 # (False: another node got proof first, new blockchain)
                 return False, new_blockchain
     # Once that number is found, we can return it as a proof of our work
+    if _timed:
+        t2 = time.time()
+        _write_time(hash_name, 'Proof of Work', hash_bit, t2-t1)
     return incrementer, blockchain
 
 
@@ -122,6 +156,9 @@ def mine(a, blockchain, node_pending_transactions):
         In order to prevent too many coins to be created, the process
         is slowed down by a proof of work algorithm.
         """
+
+        if _timed:
+            t1 = time.time()
         # Get the last proof of work
         last_block = BLOCKCHAIN[len(BLOCKCHAIN) - 1]
         last_proof = last_block.data['proof-of-work']
@@ -175,6 +212,9 @@ def mine(a, blockchain, node_pending_transactions):
                 }) + "\n")
             a.send(BLOCKCHAIN)
             requests.get(MINER_NODE_URL + "/blocks?update=" + MINER_ADDRESS)
+            if _timed:
+                t2 = time.time()
+                _write_time(hash_name, 'Mining one block', hash_bit, t2-t1)
 
 
 def find_new_chains():
@@ -285,30 +325,27 @@ def validate_signature(public_key, signature, message):
     it's you (and not someone else) trying to do a transaction with your
     address. Called when a user tries to submit a new transaction.
     """
-    if dss.name == 'gost':
-        public_key = base64.b64decode(public_key)
-    else:
-        public_key = (base64.b64decode(public_key)).hex()
+    if _timed:
+        t1 = time.time()
+    try:
+        if dss.name == 'gost':
+            public_key = base64.b64decode(public_key)
+        else:
+            public_key = (base64.b64decode(public_key)).hex()
+    except: pass
     signature = base64.b64decode(signature)
     try:
         vk = dss.VerifyingKey.from_string(bytes.fromhex(public_key), curve=dss.SECP256k1)
     except:
-        # print('needed')
-        # print(public_key, signature, message)
-        # print('needed')
         vk = dss.VerifyingKey().from_string(public_key)
 
-#     print('\n\n\n<>VALIDATING\n\n\n')
-#     print('verigying key ', vk)
-#     print('\n\n\n</>VALIDATING\n\n\n')
-
-#     print('\n\n\n<>VALIDATING\n\n\n')
-#     print('message ', message, '\nencoded: ', message.encode())
-#     print('signature ', signature)
-#     print('\n\n\n</>VALIDATING\n\n\n')
     # Try changing into an if/else statement as except is too broad.
     try:
-        return vk.verify(signature, message.encode())
+        res = vk.verify(signature, message.encode())
+        if _timed:
+            t2 = time.time()
+            _write_time(alg_name, 'Verifying signature', alg_bit, t2-t1)
+        return res
     except:
         return False
 
@@ -322,7 +359,7 @@ def welcome_msg():
         a parallel chain.\n\n\n""")
 
 
-if __name__ == '__main__':
+def run():
     welcome_msg()
     # Start mining
     a, b = Pipe()
@@ -331,3 +368,7 @@ if __name__ == '__main__':
     # Start server to receive transactions
     p2 = Process(target=node.run(), args=b)
     p2.start()
+
+
+if __name__ == '__main__':
+    run()

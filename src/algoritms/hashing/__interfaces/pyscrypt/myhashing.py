@@ -2,6 +2,8 @@ from pyscrypt import hash
 from binascii import hexlify
 from uuid import uuid4
 
+name = 'scrypt'
+bit = '256'
 
 class myhashing:
     def __init__(self):

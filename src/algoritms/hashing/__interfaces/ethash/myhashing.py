@@ -1,6 +1,8 @@
 import ethash
 from binascii import hexlify
 
+name = 'ethash'
+bit = '256'
 
 class myhashing:
     def __init__(self):
