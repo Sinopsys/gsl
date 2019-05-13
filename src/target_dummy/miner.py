@@ -4,13 +4,22 @@ import hashlib
 import json
 import requests
 import base64
+from datetime import datetime
 from flask import Flask, request
 from multiprocessing import Process, Pipe
+from werkzeug.serving import run_simple
+
 try:
     import mydss
     dss = mydss
-    alg_name = dss.name
-    alg_bit = dss.bit
+    if hasattr(dss, 'name') and hasattr(dss, 'bit'):
+        alg_name = dss.name
+        alg_bit = dss.bit
+        try:
+            from mydss import mydss
+            dss = mydss
+        except:
+            dss = mydss
 except:
     import ecdsa
     dss = ecdsa
@@ -18,23 +27,24 @@ except:
     alg_bit = '256'
 
 try:
-    from myhashing import myhashing
+    import myhashing
     hashing = myhashing
-    hash_name = hashing.name
-    hash_bit = hashing.bit
+    if hasattr(hashing, 'name') and hasattr(hashing, 'bit'):
+        hash_name = hashing.name
+        hash_bit = hashing.bit
+        try:
+            from myhashing import myhashing
+            hashing = myhashing
+        except:
+            hashing = myhashing
 except:
     hashing = hashlib.sha256
     hash_name = 'sha256'
     hash_bit = '256'
 
-# from atiesh import generated_spells
-
 ##============================
 # MINER CONFIG
 ##============================
-"""Configure this file before you start mining. Check wallet.py for
-more details.
-"""
 
 # Write your generated adress here. All coins mined will go to this address
 MINER_ADDRESS = "q3nf394hjg-random-miner-address-34nf3i4nflkn3oi"
@@ -48,21 +58,21 @@ MINER_NODE_URL = f"http://localhost:{_port}"
 PEER_NODES = []
 ##============================
 
-node = Flask(__name__)
-
+a, b = Pipe()
 header_written = False
-
+to_reload = False
 _timed = False
 _profd = False
 
 
 def _write_time(alg, func, bit, etime):
     global header_written
-    if not os.path.exists('time.csv') or (not header_written and not os.path.getsize('time.csv') > 0):
-        with open('time.csv', 'a') as __fd__:
+    time_file = '/home/coldmind/tmp/gsl/time_profile_1.csv'
+    if not os.path.exists(time_file) or (not header_written and not os.path.getsize(time_file) > 0):
+        with open(time_file, 'a') as __fd__:
             __fd__.write('alg;func;bit;time\n')
             header_written = True
-    with open('time.csv', 'a') as __fd__:
+    with open(time_file, 'a') as __fd__:
         __fd__.write(f'{alg};{func};{bit};{etime}\n')
 
 
@@ -260,67 +270,6 @@ def validate_blockchain(block):
     return True
 
 
-@node.route('/blocks', methods=['GET'])
-def get_blocks():
-    # Load current blockchain. Only you should update your blockchain
-    if request.args.get("update") == MINER_ADDRESS:
-        global BLOCKCHAIN
-        BLOCKCHAIN = b.recv()
-    chain_to_send = BLOCKCHAIN
-    # Converts our blocks into dictionaries so we can send them as json objects later
-    chain_to_send_json = []
-    for block in chain_to_send:
-        try:
-            block = {
-                "index": str(block.index),
-                "timestamp": str(block.timestamp),
-                "data": str(block.data),
-                "hash": block.hash.decode()
-            }
-        except:
-            block = {
-                "index": str(block.index),
-                "timestamp": str(block.timestamp),
-                "data": str(block.data),
-                "hash": block.hash
-            }
-        chain_to_send_json.append(block)
-
-    # Send our chain to whomever requested it
-    chain_to_send = json.dumps(chain_to_send_json)
-    return chain_to_send
-
-
-@node.route('/txion', methods=['GET', 'POST'])
-def transaction():
-    """Each transaction sent to this node gets validated and submitted.
-    Then it waits to be added to the blockchain. Transactions only move
-    coins, they don't create it.
-    """
-    if request.method == 'POST':
-        # On each new POST request, we extract the transaction data
-        new_txion = request.get_json()
-        # Then we add the transaction to our list
-        if validate_signature(new_txion['from'], new_txion['signature'], new_txion['message']):
-            NODE_PENDING_TRANSACTIONS.append(new_txion)
-            # Because the transaction was successfully
-            # submitted, we log it to our console
-            print("New transaction")
-            print("FROM: {0}".format(new_txion['from']))
-            print("TO: {0}".format(new_txion['to']))
-            print("AMOUNT: {0}\n".format(new_txion['amount']))
-            # Then we let the client know it worked out
-            return "Transaction submission successful\n"
-        else:
-            return "Transaction submission failed. Wrong signature\n"
-    # Send pending transactions to the mining process
-    elif request.method == 'GET' and request.args.get("update") == MINER_ADDRESS:
-        pending = json.dumps(NODE_PENDING_TRANSACTIONS)
-        # Empty transaction list
-        NODE_PENDING_TRANSACTIONS[:] = []
-        return pending
-
-
 def validate_signature(public_key, signature, message):
     """Verifies if the signature is correct. This is used to prove
     it's you (and not someone else) trying to do a transaction with your
@@ -329,16 +278,21 @@ def validate_signature(public_key, signature, message):
     if _timed:
         t1 = time.time()
     try:
-        if dss.name == 'gost':
-            public_key = base64.b64decode(public_key)
+        if hasattr(dss, 'name'):
+            if dss.name == 'gost':
+                public_key = base64.b64decode(public_key)
         else:
             public_key = (base64.b64decode(public_key)).hex()
-    except: pass
+    except:
+        pass
     signature = base64.b64decode(signature)
     try:
-        vk = dss.VerifyingKey.from_string(bytes.fromhex(public_key), curve=dss.SECP256k1)
-    except:
+        print(public_key)
+        print(type(public_key))
         vk = dss.VerifyingKey().from_string(public_key)
+    except:
+        curve = dss.SECP256k1
+        vk = dss.VerifyingKey.from_string(bytes.fromhex(public_key), curve=curve)
 
     # Try changing into an if/else statement as except is too broad.
     try:
@@ -352,24 +306,139 @@ def validate_signature(public_key, signature, message):
 
 
 def welcome_msg():
-    print("""       =========================================\n
-        SIMPLE COIN v1.0.0 - BLOCKCHAIN SYSTEM\n
-       =========================================\n\n
-        You can find more help at: https://github.com/cosme12/SimpleCoin\n
-        Make sure you are using the latest version or you may end in
-        a parallel chain.\n\n\n""")
+    # print("""       =========================================\n
+    #     SIMPLE COIN v1.0.0 - BLOCKCHAIN SYSTEM\n
+    #    =========================================\n\n
+    #     You can find more help at: https://github.com/cosme12/SimpleCoin\n
+    #     Make sure you are using the latest version or you may end in
+    #     a parallel chain.\n\n\n""")
+    pass
 
 
-def run():
+def get_app():
+    app = Flask(__name__)
+    now = datetime.now()
+
+    @app.route('/')
+    def index():
+        return f'hello, the app started at %s' % now
+
+    @app.route('/reload')
+    def reload():
+        global to_reload
+        to_reload = True
+        return 'reloaded'
+
+    @app.route('/blocks', methods=['GET'])
+    def get_blocks():
+        # Load current blockchain. Only you should update your blockchain
+        if request.args.get("update") == MINER_ADDRESS:
+            global BLOCKCHAIN
+            BLOCKCHAIN = b.recv()
+        chain_to_send = BLOCKCHAIN
+        # Converts our blocks into dictionaries so we can send them as json objects later
+        chain_to_send_json = []
+        for block in chain_to_send:
+            try:
+                block = {
+                    "index": str(block.index),
+                    "timestamp": str(block.timestamp),
+                    "data": str(block.data),
+                    "hash": block.hash.decode()
+                }
+            except:
+                block = {
+                    "index": str(block.index),
+                    "timestamp": str(block.timestamp),
+                    "data": str(block.data),
+                    "hash": block.hash
+                }
+            chain_to_send_json.append(block)
+
+        # Send our chain to whomever requested it
+        chain_to_send = json.dumps(chain_to_send_json)
+        return chain_to_send
+
+    @app.route('/txion', methods=['GET', 'POST'])
+    def transaction():
+        """Each transaction sent to this node gets validated and submitted.
+        Then it waits to be added to the blockchain. Transactions only move
+        coins, they don't create it.
+        """
+        if request.method == 'POST':
+            # On each new POST request, we extract the transaction data
+            new_txion = request.get_json()
+            # Then we add the transaction to our list
+            if validate_signature(new_txion['from'], new_txion['signature'], new_txion['message']):
+                NODE_PENDING_TRANSACTIONS.append(new_txion)
+                # Because the transaction was successfully
+                # submitted, we log it to our console
+                print("New transaction")
+                print("FROM: {0}".format(new_txion['from']))
+                print("TO: {0}".format(new_txion['to']))
+                print("AMOUNT: {0}\n".format(new_txion['amount']))
+                # Then we let the client know it worked out
+                return "Transaction submission successful\n"
+            else:
+                return "Transaction submission failed. Wrong signature\n"
+        # Send pending transactions to the mining process
+        elif request.method == 'GET' and request.args.get("update") == MINER_ADDRESS:
+            pending = json.dumps(NODE_PENDING_TRANSACTIONS)
+            # Empty transaction list
+            NODE_PENDING_TRANSACTIONS[:] = []
+            return pending
+
+    return app
+
+
+class AppReloader(object):
+    def __init__(self, create_app):
+        self.create_app = create_app
+        self.app = create_app()
+
+    def get_application(self):
+        global to_reload
+        if to_reload:
+            self.app = self.create_app()
+            to_reload = False
+
+        return self.app
+
+    def __call__(self, environ, start_response):
+        app = self.get_application()
+        return app(environ, start_response)
+
+
+def profd_run():
     welcome_msg()
     # Start mining
-    a, b = Pipe()
     p1 = Process(target=mine, args=(a, BLOCKCHAIN, NODE_PENDING_TRANSACTIONS))
     p1.start()
     # Start server to receive transactions
-    p2 = Process(target=node.run(), args=b)
+
+    kwargs = {
+            'use_reloader': False,
+            'use_debugger': True,
+            'use_evalex': True
+            }
+    app = AppReloader(get_app)
+    p2 = Process(target=run_simple, args=('localhost', 5000, app), kwargs=kwargs)
     p2.start()
 
 
+def full_run():
+    if _profd:
+        profd_run()
+    else:
+        welcome_msg()
+        node = get_app()
+        # Start mining
+        p1 = Process(target=mine, args=(a, BLOCKCHAIN, NODE_PENDING_TRANSACTIONS))
+        p1.start()
+        # Start server to receive transactions
+        p2 = Process(target=node.run(), args=b)
+        p2.start()
+
+
 if __name__ == '__main__':
-    run()
+    full_run()

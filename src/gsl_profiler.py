@@ -1,5 +1,8 @@
 import os
 import sys
+import requests
+import itertools
+import json
 import subprocess
 from technologies import TOINSTALL, INTERFACES, OPTIONS
 from goodsteel_ledger import Jarquai
@@ -7,7 +10,7 @@ from goodsteel_ledger import Jarquai
 
 class Profiler(object):
     def __init__(self):
-        self.starting_port = 4999
+        pass
 
     def get_all_algs(self, alg):
         res = []
@@ -21,29 +24,38 @@ class Profiler(object):
         jq.build_ledger()
 
     def measure_all(self):
-        port = self.starting_port + 1
+        port = 5000
         import_path = os.path.join(self.path, self.name)
         os.system('sed -ir "0,/def _portd/{s/_portd = .*/_portd = ' + str(port) + '/}" ' + os.path.join(import_path, 'miner.py'))
         os.system('sed -ir "0,/def _portd/{s/_portd = .*/_portd = ' + str(port) + '/}" ' + os.path.join(import_path, 'wallet.py'))
-        if import_path not in sys.path:
-            sys.path.append(import_path)
-        import miner
-        import wallet
-        miner.run()
-        wallet._profile_timings()
-        pass
+        # if import_path not in sys.path:
+        #     sys.path.append(import_path)
+        # import miner
+        # import wallet
+        # miner.full_run()
+        # wallet._profile_timings()
+        # reloaded = requests.get('http://localhost:' + str(port) + '/reload')
+        # print('\n\n\n\n')
+        # print(reloaded.content)
+        # print('\n\n\n\n')
+        # pass
 
     def measure_all_times(self, path):
         self.path = path
         self.name = 'gsl_profiling'
         hashes = self.get_all_algs('hashing')
         dss = self.get_all_algs('digital signature')
-        for hash_ in hashes:
-            for ds_ in dss:
-                options = {'hashing': hash_, 'digital signature': ds_}
-                self.create_ledger(options, self.name, path, True)
-                self.measure_all()
-                pass
+        num = int(os.environ['ALGS_NUM'])
+        pairs = list(itertools.product(hashes, dss))[num]
+        options = {'hashing': pairs[0], 'digital signature': pairs[1]}
+        self.create_ledger(options, self.name, path, True)
+        self.measure_all()
+        # for hash_ in hashes:
+        #     for ds_ in dss:
+        #         options = {'hashing': hash_, 'digital signature': ds_}
+        #         self.create_ledger(options, self.name, path, True)
+        #         self.measure_all()
+        #         pass
 
     def _pip_install_(self, package):
         subprocess.call([sys.executable, '-m', 'pip', 'install', package])

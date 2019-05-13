@@ -19,6 +19,7 @@ node_pending_transactions list to avoid it get processed more than 1 time.
 """
 
 import os
+import sys
 import time
 import requests
 import time
@@ -27,8 +28,17 @@ import base64
 try:
     import mydss
     dss = mydss
-    alg_name = dss.name
-    alg_bit = dss.bit
+    print(dss)
+    print(dss.name)
+    print(dss.bit)
+    if hasattr(dss, 'name') and hasattr(dss, 'bit'):
+        alg_name = dss.name
+        alg_bit = dss.bit
+        try:
+            from mydss import mydss
+            dss = mydss
+        except:
+            dss = mydss
 except:
     import ecdsa
     dss = ecdsa
@@ -42,11 +52,12 @@ _port = 5000
 
 def _write_time(alg, func, bit, etime):
     global header_written
-    if not header_written and not os.path.getsize('time.csv') > 0:
-        with open('time.csv', 'a') as __fd__:
+    time_file = '/home/coldmind/tmp/gsl/time_profile_1.csv'
+    if not header_written and not os.path.getsize(time_file) > 0:
+        with open(time_file, 'a') as __fd__:
             __fd__.write('alg;func;bit;time\n')
             header_written = True
-    with open('time.csv', 'a') as __fd__:
+    with open(time_file, 'a') as __fd__:
         __fd__.write(f'{alg};{func};{bit};{etime}\n')
 
 
@@ -60,6 +71,7 @@ def _profile_timings():
                 }
         p1_prv, p1_pub = generate_ECDSA_keys(ret=True)
         p2_prv, p2_pub = generate_ECDSA_keys(ret=True)
+        print(f'sending from {p1_pub} \n to \n{p2_pub}\nusing\np1_prv')
         # Send for p1 to p2 100 money
         send_transaction(p1_pub, p1_prv, p2_pub, 100)
         check_transactions()
@@ -106,7 +118,12 @@ def send_transaction(addr_from, private_key, addr_to, amount):
      # addr_from="SD5IZAuFixM3PTmkm5ShvLm1tbDNOmVlG7tg6F5r7VHxPNWkNKbzZfa+JdKmfBAIhWs9UKnQLOOL1U+R3WxcsQ=="
      # addr_to="SD5IZAuFixM3PTmkm5ShvLm1tbDNOmVlG7tg6F5r7VHxPNWkNKbzZfa+JdKmfBAIhWs9UKnQLOOL1U+R3WxcsQ=="
 
-    if len(private_key) == 64 or dss.name == 'gost':
+    try:
+        len_prv = len(private_key)
+    except:
+        len_prv = len(str(private_key))
+
+    if len_prv == 64 or dss.name == 'gost':
         signature, message = sign_ECDSA_msg(private_key)
         url = f'http://localhost:{_port}/txion'
         payload = {"from": addr_from,
@@ -209,11 +226,14 @@ def sign_ECDSA_msg(private_key):
 
 
 if __name__ == '__main__':
-    print("""       =========================================\n
-        SIMPLE COIN v1.0.0 - BLOCKCHAIN SYSTEM\n
-       =========================================\n\n
-        You can find more help at: https://github.com/cosme12/SimpleCoin\n
-        Make sure you are using the latest version or you may end in
-        a parallel chain.\n\n\n""")
+    # print("""       =========================================\n
+    #     SIMPLE COIN v1.0.0 - BLOCKCHAIN SYSTEM\n
+    #    =========================================\n\n
+    #     You can find more help at: https://github.com/cosme12/SimpleCoin\n
+    #     Make sure you are using the latest version or you may end in
+    #     a parallel chain.\n\n\n""")
+    if _profd:
+        _profile_timings()
+        sys.exit()
     wallet()
     input("Press ENTER to exit...")

@@ -213,6 +213,8 @@ def main() -> None:
             return
     except Exception as e:
         __logger__.error(e)
+        # raise (e)
+        # return
 
     if not args.init:
         __logger__.warning('NOT initializing a ledger since `--init` argument was not provided.')
