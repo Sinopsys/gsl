@@ -18,7 +18,7 @@ transaction with same timestamp was added, they should remove it from the
 node_pending_transactions list to avoid it get processed more than 1 time.
 """
 
-import os    
+import os
 import time
 import requests
 import time
@@ -38,6 +38,7 @@ except:
 header_written = False
 _timed = False
 _profd = False
+_port = 5000
 
 def _write_time(alg, func, bit, etime):
     global header_written
@@ -47,6 +48,21 @@ def _write_time(alg, func, bit, etime):
             header_written = True
     with open('time.csv', 'a') as __fd__:
         __fd__.write(f'{alg};{func};{bit};{etime}\n')
+
+
+def _profile_timings():
+    if _profd:
+        keys = {
+                'p1_pub': '',
+                'p1_prv': '',
+                'p2_pub': '',
+                'p2_prv': ''
+                }
+        p1_prv, p1_pub = generate_ECDSA_keys(ret=True)
+        p2_prv, p2_pub = generate_ECDSA_keys(ret=True)
+        # Send for p1 to p2 100 money
+        send_transaction(p1_pub, p1_prv, p2_pub, 100)
+        check_transactions()
 
 
 def wallet():
@@ -92,7 +108,7 @@ def send_transaction(addr_from, private_key, addr_to, amount):
 
     if len(private_key) == 64 or dss.name == 'gost':
         signature, message = sign_ECDSA_msg(private_key)
-        url = 'http://localhost:5000/txion'
+        url = f'http://localhost:{_port}/txion'
         payload = {"from": addr_from,
                    "to": addr_to,
                    "amount": amount,
@@ -110,11 +126,11 @@ def check_transactions():
     """Retrieve the entire blockchain. With this you can check your
     wallets balance. If the blockchain is to long, it may take some time to load.
     """
-    res = requests.get('http://localhost:5000/blocks')
+    res = requests.get(f'http://localhost:{_port}/blocks')
     print(res.text)
 
 
-def generate_ECDSA_keys():
+def generate_ECDSA_keys(ret=False):
     """This function takes care of creating your private and public (your address) keys.
     It's very important you don't lose any of them or those wallets will be lost
     forever. If someone else get access to your private key, you risk losing your coins.
@@ -153,6 +169,9 @@ def generate_ECDSA_keys():
     except:
         public_key = base64.b64encode(bytes.fromhex(public_key))
 
+    if ret:
+        return private_key, public_key.decode()
+
     filename = input("Write the name of your new address: ") + ".txt"
 
     with open(filename, "w") as f:
@@ -180,7 +199,7 @@ def sign_ECDSA_msg(private_key):
     except:
         sk = dss.SigningKey().from_string(str(private_key))
     signed = sk.sign(bmessage)
-    
+
     if _timed:
         t2 = time.time()
         _write_time(alg_name, 'Signing message', alg_bit, t2-t1)

@@ -7,7 +7,7 @@ from goodsteel_ledger import Jarquai
 
 class Profiler(object):
     def __init__(self):
-        pass
+        self.starting_port = 4999
 
     def get_all_algs(self, alg):
         res = []
@@ -21,10 +21,16 @@ class Profiler(object):
         jq.build_ledger()
 
     def measure_all(self):
-        sys.path.append(os.path.join(self.path, self.name))
+        port = self.starting_port + 1
+        import_path = os.path.join(self.path, self.name)
+        os.system('sed -ir "0,/def _portd/{s/_portd = .*/_portd = ' + str(port) + '/}" ' + os.path.join(import_path, 'miner.py'))
+        os.system('sed -ir "0,/def _portd/{s/_portd = .*/_portd = ' + str(port) + '/}" ' + os.path.join(import_path, 'wallet.py'))
+        if import_path not in sys.path:
+            sys.path.append(import_path)
         import miner
-        # miner.run()
-        # subprocess.call([sys.executable, '-m', 'pip', 'install', package])
+        import wallet
+        miner.run()
+        wallet._profile_timings()
         pass
 
     def measure_all_times(self, path):
