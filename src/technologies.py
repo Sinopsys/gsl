@@ -44,6 +44,19 @@ LINKS = {
     'GOST R 34.10-2012': 'https://pypi.org/project/pygost/',
 }
 
+UPDATE_LINKS = {
+    'Ethash': 'https://github.com/ethereum/ethash',
+    'Lyra2rev2': 'https://github.com/straks/lyra2re-hash-python',
+    'myr-groestl': 'https://github.com/vergecurrency/myr-groestl_hash',
+    'blake2b': 'https://github.com/Legrandin/pycryptodome',
+    'blake2s': 'https://github.com/Legrandin/pycryptodome',
+    'Scrypt': 'https://github.com/ricmoo/pyscrypt',
+    'SHA-256': 'https://github.com/thomdixon/pysha2',
+    'SHA-512': 'https://github.com/thomdixon/pysha2',
+    'X11': 'https://github.com/mazaclub/x11_hash',
+    'ECDSA': 'https://github.com/warner/python-ecdsa',
+}
+
 TOINSTALL = {
     'SHA-256': 'algoritms/hashing/sha256',
     'SHA-512': 'algoritms/hashing/sha512',
