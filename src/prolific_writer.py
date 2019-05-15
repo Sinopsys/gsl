@@ -75,6 +75,8 @@ class ProlificWriter(object):
         name = 'myhashing.py'
         type_ = self.opts['hashing']
         path = os.path.join(src_path, INTERFACES[type_], name)
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
         copyfile(path, os.path.join(self.path, name))
 
     def _write_digital_signature_(self):
