@@ -83,7 +83,7 @@ class Krinkle(object):
                 ==============MAKE YOUR CHOISES==============
                 =============================================
                '''.format(name=name, path=path))
-        print(f'{ASCIIColors.BACK_LIGHT_BLUE}THIS color indicates you will be provided with code and documentation for a particular algorithm{ASCIIColors.ENDS}')
+        print(f'{ASCIIColors.BACK_LIGHT_BLUE}THIS color indicates you will be provided with code or documentation for a particular algorithm BUT it will not be included in YOUR ledger code!{ASCIIColors.ENDS}')
         print(f'{ASCIIColors.BACK_BLUE}THIS color indicates that GSL will generate a working code for your ledger using a particular algorithm{ASCIIColors.ENDS}')
 
     def prompt(self, name, path) -> dict:
@@ -107,8 +107,37 @@ class Krinkle(object):
             __logger__.error('Path is invalid')
             sys.exit(1)
         self.print_description(name, path)
+        print('\nChoose type of concrete algorithm from which your blockchain will consist of:\n')
         for k, v in OPTIONS.items():
+            if not ('hash' in k or 'digital' in k):
+                continue
             print(f'\nChoose type of {k} of the ledger')
+            if isinstance(v, list):
+                for num, opt in enumerate(v):
+                    if 'hash' in k or 'digital' in k:
+                        if opt in TOINSTALL:
+                            prefix = ASCIIColors.BACK_BLUE
+                        else:
+                            prefix = ASCIIColors.BACK_LIGHT_BLUE
+                    else:
+                        prefix = ASCIIColors.ENDS
+                    print(f'{prefix}{num+1}: {opt}{ASCIIColors.ENDS}', end='\n')
+                try:
+                    n = input(f'Enter num from 1 to {len(v)}, default [1]: ')
+                    n = 0 if n == '' else int(n) - 1
+                    if n < 0 or n >= len(v):
+                        raise ChooseError
+                    self.ledger_config[k] = n
+                except Exception as e:
+                    __logger__.exception(str(e))
+                    return
+            else:
+                print(v)
+        print('\n\nNow, choose related themes for which you will be provided with relevant information (links, web sites, etc.)\n')
+        for k, v in OPTIONS.items():
+            if 'hash' in k or 'digital' in k:
+                continue
+            print(f'\nOption: {k} of the ledger')
             if isinstance(v, list):
                 for num, opt in enumerate(v):
                     if 'hash' in k or 'digital' in k:
@@ -144,10 +173,6 @@ class Krinkle(object):
 class Jarquai(object):
     """
     This helps in building corresponding to a selected structure ledger
-    ________________________
-    ATTENTION, ALPHA VERSION
-    Gives links to implemented parts, not uniting them in an actually
-    working ledger
     """
     def __init__(self, options: dict, name, path, timed, profd=False):
         """

@@ -6,7 +6,7 @@ OPTIONS = {
                      'KECCAK-512', 'Ethash', 'X11', 'X17', 'myr-groestl',
                      'Lyra2rev2', 'blake2s', 'blake2b'],
         'random':  ['DRBG', 'CPRNG'],
-        'digital signature':  ['ECDSA', 'DSA', 'elgamal128', 'elgamal256', 'GOST R 34.10-2012'],
+        'digital signature':  ['ECDSA', 'DSA', 'GOST R 34.10-2012'],
 }
 
 LINKS = {
@@ -39,8 +39,8 @@ LINKS = {
     'CPRNG': 'https://riptutorial.com/python/example/3857/create-cryptographically-secure-random-numbers',
     'ECDSA': 'https://github.com/warner/python-ecdsa',
     'DSA': 'https://github.com/rrottmann/pydsa',
-    'elgamal128': 'https://github.com/RyanRiddle/elgamal',
-    'elgamal256': 'https://github.com/RyanRiddle/elgamal',
+    # 'elgamal128': 'https://github.com/RyanRiddle/elgamal',
+    # 'elgamal256': 'https://github.com/RyanRiddle/elgamal',
     'GOST R 34.10-2012': 'https://pypi.org/project/pygost/',
 }
 

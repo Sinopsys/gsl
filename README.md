@@ -14,7 +14,7 @@ $    pip3 install . --user
 ```
 
 Then, to successfully launch app, it is needed to have a config with path
-`/home/$USER/.gsl/config.yaml`
+`/etc/gsl/config.yaml`
 
 Example `config.yaml`:
 ```
