@@ -73,6 +73,9 @@ coverage.xml
 local_settings.py
 db.sqlite3
 
+!pusher.log
+!updater.log
+
 # Flask stuff:
 instance/
 .webassets-cache
