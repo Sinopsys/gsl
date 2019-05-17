@@ -236,6 +236,8 @@ def main() -> None:
             profiler = Profiler()
             profiler.measure_all_times(args.PATH)
             return
+    except AttributeError as e:
+        pass
     except Exception as e:
         __logger__.error(e)
         # raise (e)

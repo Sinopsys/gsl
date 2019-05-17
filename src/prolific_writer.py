@@ -9,7 +9,6 @@ from inspect import getsource
 from shutil import copyfile
 from technologies import TOINSTALL
 from technologies import INTERFACES
-import example_chain
 from target_dummy import wallet
 from target_dummy import miner
 
