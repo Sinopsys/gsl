@@ -28,13 +28,16 @@ import logging.config
 
 import config
 from prolific_writer import ProlificWriter
-from technologies import OPTIONS
-from technologies import LINKS
-from technologies import TOINSTALL
 from utils.log import LOG_CONFIG
 from utils.misc import get_version
 from utils.output import print_nested
 from utils.output import ASCIIColors
+from technologies import _kv_, get
+
+
+TOINSTALL = _kv_.TOINSTALL
+OPTIONS = _kv_.OPTIONS
+LINKS = _kv_.LINKS
 
 
 DEFAULT_CONFIG_PATH = '/etc/gsl/config.yaml'
@@ -204,7 +207,7 @@ class Jarquai(object):
         """
         res = {}
         for k, v in self.selected_options.items():
-            res[v] = LINKS[v]
+            res[v] = get('LINKS', v)
         print_nested(res, 1)
 
 

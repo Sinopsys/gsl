@@ -7,10 +7,11 @@ import sys
 import subprocess
 from inspect import getsource
 from shutil import copyfile
-from technologies import TOINSTALL
-from technologies import INTERFACES
+from technologies import _kv_, get
 from target_dummy import wallet
 from target_dummy import miner
+TOINSTALL = _kv_.TOINSTALL
+INTERFACES = _kv_.INTERFACES
 
 
 class ProlificWriter(object):
@@ -46,7 +47,7 @@ class ProlificWriter(object):
                 return p
 
     def _pip_install_(self, package):
-        subprocess.call([sys.executable, '-m', 'pip', 'install', package])
+        subprocess.call([sys.executable, '-m', 'pip', 'install', package, '--user'])
 
     def _install_(self, path):
         """
@@ -67,13 +68,13 @@ class ProlificWriter(object):
     def _write_hashing_(self):
         # INSTALLING PROCEDURE
         src_path = self._get_src_path_()
-        path = os.path.join(src_path, TOINSTALL[self.opts['hashing']])
+        path = os.path.join(src_path, get('TOINSTALL', self.opts['hashing']))
         self._install_(path)
 
         # WRITING PROCEDURE
         name = 'myhashing.py'
         type_ = self.opts['hashing']
-        path = os.path.join(src_path, INTERFACES[type_], name)
+        path = os.path.join(src_path, get('INTERFACES', type_), name)
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         copyfile(path, os.path.join(self.path, name))
@@ -82,13 +83,13 @@ class ProlificWriter(object):
         pass
         # INSTALLING PROCEDURE
         src_path = self._get_src_path_()
-        path = os.path.join(src_path, TOINSTALL[self.opts['digital signature']])
+        path = os.path.join(src_path, get('TOINSTALL', self.opts['digital signature']))
         self._install_(path)
 
         # WRITING PROCEDURE
         name = 'mydss.py'
         type_ = self.opts['digital signature']
-        path = os.path.join(src_path, INTERFACES[type_], name)
+        path = os.path.join(src_path, get('INTERFACES', type_), name)
         copyfile(path, os.path.join(self.path, name))
 
 

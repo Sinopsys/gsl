@@ -4,8 +4,11 @@ import requests
 import itertools
 import json
 import subprocess
-from technologies import TOINSTALL, INTERFACES, OPTIONS
+from technologies import _kv_, get
 from goodsteel_ledger import Jarquai
+
+TOINSTALL = _kv_.TOINSTALL
+OPTIONS = _kv_.OPTIONS
 
 
 class Profiler(object):
@@ -14,7 +17,7 @@ class Profiler(object):
 
     def get_all_algs(self, alg):
         res = []
-        for item in OPTIONS[alg]:
+        for item in get('OPTIONS', alg):
             if item in TOINSTALL.keys():
                 res.append(item)
         return res
