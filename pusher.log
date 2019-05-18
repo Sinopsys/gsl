@@ -7,3 +7,10 @@ Your branch is up-to-date with 'origin/master'.
 nothing to commit, working directory clean
 Everything up-to-date
 Fri May 17 21:00:01 MSK 2019
+[master bbc688e] Update algorithms: 17_05_2019.
+ 2 files changed, 78 insertions(+)
+ create mode 100644 pusher.log
+ create mode 100644 updater.log
+To git@github.com:Sinopsys/gsl.git
+   197ba64..bbc688e  master -> master
+Sat May 18 21:00:01 MSK 2019
