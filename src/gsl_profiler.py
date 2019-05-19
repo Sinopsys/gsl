@@ -67,6 +67,7 @@ class Profiler(object):
         """
         Installs with `python setup.py install`
         """
+        # CRY HAVOC
         if 'ecdsa' in path.lower():
             self._pip_install_('ecdsa')
             return
