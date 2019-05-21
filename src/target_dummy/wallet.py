@@ -28,9 +28,6 @@ import base64
 try:
     import mydss
     dss = mydss
-    print(dss)
-    print(dss.name)
-    print(dss.bit)
     if hasattr(dss, 'name') and hasattr(dss, 'bit'):
         alg_name = dss.name
         alg_bit = dss.bit

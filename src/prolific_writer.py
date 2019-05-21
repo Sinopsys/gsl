@@ -63,7 +63,7 @@ class ProlificWriter(object):
             self._pip_install_('x17_hash')
             return
         os.chdir(path)
-        subprocess.call([sys.executable, f'{path}/setup.py', 'install'])
+        subprocess.call([sys.executable, f'{path}/setup.py', 'install', '--user'])
 
     def _write_hashing_(self):
         # INSTALLING PROCEDURE
@@ -80,7 +80,6 @@ class ProlificWriter(object):
         copyfile(path, os.path.join(self.path, name))
 
     def _write_digital_signature_(self):
-        pass
         # INSTALLING PROCEDURE
         src_path = self._get_src_path_()
         path = os.path.join(src_path, get('TOINSTALL', self.opts['digital signature']))
