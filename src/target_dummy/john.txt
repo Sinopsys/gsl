@@ -1,2 +1,2 @@
-Private key: 248bb7565c83e5487f7743414cf56eb88247a8732eff37a16f9e914917d3eeda
-Wallet address / Public key: ewFR+jGjIkFXcDre3IsBU6KGYfPUY6gfzyGueeCm44EoaPkf20o2/TmBCVhxsn/TyKPlh2nQQwL5IbYdCbtZMA==
+Private key: 1048ab60a7f402afca91311e24b7bc72880cec9a7e1ba608c7657d0b1e140399
+Wallet address / Public key: YmLjToO9UrGfHe4Knv8wl+umrTvPuE7qzPNR8zjhEDvnfJZymnPblSNzR7EK140kaPIbeHKh7IYftL/+dgnKCQ==

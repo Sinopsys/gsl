@@ -31,6 +31,7 @@ class ASCIIColors:
     WHITE = '\033[97m'
     BACK_LIGHT_BLUE = '\033[104m'
     BACK_BLUE = '\033[44m'
+    INVERTED = '\033[7m'
 
 
 class NestedPrint:
@@ -52,7 +53,7 @@ class NestedPrint:
         else:
             print('{0}{1}- {2}{3}'.format(
                 ''.rjust(space, ' '),
-                ASCIIColors.WHITE,
+                ASCIIColors.INVERTED,
                 output,
                 ASCIIColors.ENDS
             ))
@@ -63,7 +64,7 @@ class NestedPrint:
                 ''.rjust(space, ' '),
                 ASCIIColors.LIGHT_CYAN,
                 key,
-                ASCIIColors.WHITE
+                ASCIIColors.INVERTED
             ))
             self.printf(val, space=(space + 4))
 
@@ -75,7 +76,7 @@ class NestedPrint:
                 print(
                     '{0}{1}- {2}{3}'.format(
                         ''.rjust(space, ' '),
-                        ASCIIColors.WHITE,
+                        ASCIIColors.INVERTED,
                         item,
                         ASCIIColors.ENDS
                     )

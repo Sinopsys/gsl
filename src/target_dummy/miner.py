@@ -42,32 +42,23 @@ except:
     hash_name = 'sha256'
     hash_bit = '256'
 
-##============================
-# MINER CONFIG
-##============================
-
-# Write your generated adress here. All coins mined will go to this address
-MINER_ADDRESS = "q3nf394hjg-random-miner-address-34nf3i4nflkn3oi"
-
-# Write your node url or ip. If you are running it localhost use default
-_port = 5000
-MINER_NODE_URL = f"http://localhost:{_port}"
-
-# Store the url data of every other node in the network
-# so that we can communicate with them
-PEER_NODES = []
-##============================
 
 a, b = Pipe()
 header_written = False
 to_reload = False
 _timed = False
 _profd = False
+_port = 5000
+
+MINER_ADDRESS = 'k4Odf238gn-random-dkfi3-address-k394rbgfGKe392f'
+MINER_NODE_URL = f"http://localhost:{_port}"
+PEER_NODES = []
 
 
 def _write_time(alg, func, bit, etime):
     global header_written
-    time_file = '/home/coldmind/tmp/gsl/time_profile_1.csv'
+    # time_file = '/home/coldmind/tmp/gsl/time_profile_1.csv'
+    time_file = '/tmp/time_profile_1.csv'
     if not os.path.exists(time_file) or (not header_written and not os.path.getsize(time_file) > 0):
         with open(time_file, 'a') as __fd__:
             __fd__.write('alg;func;bit;time\n')
@@ -78,23 +69,6 @@ def _write_time(alg, func, bit, etime):
 
 class Block:
     def __init__(self, index, timestamp, data, previous_hash):
-        """Returns a new Block object. Each block is "chained" to its previous
-        by calling its unique hash.
-
-        Args:
-            index (int): Block number.
-            timestamp (int): Block creation timestamp.
-            data (str): Data to be sent.
-            previous_hash(str): String representing previous block unique hash.
-
-        Attrib:
-            index (int): Block number.
-            timestamp (int): Block creation timestamp.
-            data (str): Data to be sent.
-            previous_hash(str): String representing previous block unique hash.
-            hash(str): Current block unique hash.
-
-        """
         self.index = index
         self.timestamp = timestamp
         self.data = data
@@ -102,7 +76,6 @@ class Block:
         self.hash = self.hash_block()
 
     def hash_block(self):
-        """Creates the unique hash for the block. It uses sha256 or given hashing algorithm."""
         if _timed:
             t1 = time.time()
         hasher = hashing()
@@ -115,16 +88,12 @@ class Block:
 
 
 def create_genesis_block():
-    """To create each block, it needs the hash of the previous one. First
-    block has no previous, so it must be created manually (with index zero
-     and arbitrary previous hash)"""
     return Block(0, time.time(), {
-        "proof-of-work": 9,
-        "transactions": None},
-        "0")
+        'proof-of-work': 9,
+        'transactions': None},
+        '0')
 
 
-# Node's blockchain copy
 BLOCKCHAIN = [create_genesis_block()]
 
 """ Stores the transactions that this node has in a list.
@@ -138,14 +107,13 @@ NODE_PENDING_TRANSACTIONS = []
 def proof_of_work(last_proof, blockchain):
     if _timed:
         t1 = time.time()
-    # Creates a variable that we will use to find our next proof of work
+    # For finding new proof of work
     incrementer = last_proof + 1
     # Keep incrementing the incrementer until it's equal to a number divisible by 9
     # and the proof of work of the previous block in the chain
     start_time = time.time()
     while not (incrementer % 7919 == 0 and incrementer % last_proof == 0):
         incrementer += 1
-        # Check if any node found the solution every 60 seconds
         if int((time.time()-start_time) % 60) == 0:
             # If any other node got the proof, stop searching
             new_blockchain = consensus(blockchain)
@@ -186,7 +154,7 @@ def mine(a, blockchain, node_pending_transactions):
             # Once we find a valid proof of work, we know we can mine a block so
             # ...we reward the miner by adding a transaction
             # First we load all pending transactions sent to the node server
-            NODE_PENDING_TRANSACTIONS = requests.get(MINER_NODE_URL + "/txion?update=" + MINER_ADDRESS).content
+            NODE_PENDING_TRANSACTIONS = requests.get(MINER_NODE_URL + "/mycoin?update=" + MINER_ADDRESS).content
             NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
             # Then we add the mining reward
             NODE_PENDING_TRANSACTIONS.append({
@@ -341,17 +309,17 @@ def get_app():
         for block in chain_to_send:
             try:
                 block = {
-                    "index": str(block.index),
-                    "timestamp": str(block.timestamp),
-                    "data": str(block.data),
-                    "hash": block.hash.decode()
+                    'index': str(block.index),
+                    'timestamp': str(block.timestamp),
+                    'data': str(block.data),
+                    'hash': block.hash.decode()
                 }
             except:
                 block = {
-                    "index": str(block.index),
-                    "timestamp": str(block.timestamp),
-                    "data": str(block.data),
-                    "hash": block.hash
+                    'index': str(block.index),
+                    'timestamp': str(block.timestamp),
+                    'data': str(block.data),
+                    'hash': block.hash
                 }
             chain_to_send_json.append(block)
 
@@ -359,35 +327,27 @@ def get_app():
         chain_to_send = json.dumps(chain_to_send_json)
         return chain_to_send
 
-    @app.route('/txion', methods=['GET', 'POST'])
+    @app.route('/mycoin', methods=['GET', 'POST'])
     def transaction():
         """Each transaction sent to this node gets validated and submitted.
         Then it waits to be added to the blockchain. Transactions only move
         coins, they don't create it.
         """
         if request.method == 'POST':
-            # On each new POST request, we extract the transaction data
-            new_txion = request.get_json()
-            # Then we add the transaction to our list
-            if validate_signature(new_txion['from'], new_txion['signature'], new_txion['message']):
-                NODE_PENDING_TRANSACTIONS.append(new_txion)
-                # Because the transaction was successfully
-                # submitted, we log it to our console
+            new_mycoin = request.get_json()
+            if validate_signature(new_mycoin['from'], new_mycoin['signature'], new_mycoin['message']):
+                NODE_PENDING_TRANSACTIONS.append(new_mycoin)
                 print("New transaction")
-                print("FROM: {0}".format(new_txion['from']))
-                print("TO: {0}".format(new_txion['to']))
-                print("AMOUNT: {0}\n".format(new_txion['amount']))
-                # Then we let the client know it worked out
+                print("FROM: {0}".format(new_mycoin['from']))
+                print("TO: {0}".format(new_mycoin['to']))
+                print("AMOUNT: {0}\n".format(new_mycoin['amount']))
                 return "Transaction submission successful\n"
             else:
                 return "Transaction submission failed. Wrong signature\n"
-        # Send pending transactions to the mining process
         elif request.method == 'GET' and request.args.get("update") == MINER_ADDRESS:
             pending = json.dumps(NODE_PENDING_TRANSACTIONS)
-            # Empty transaction list
             NODE_PENDING_TRANSACTIONS[:] = []
             return pending
-
     return app
 
 
