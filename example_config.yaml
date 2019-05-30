@@ -1,0 +1,4 @@
+# Example and debug configuration
+#
+init_dir: /tmp/gsl
+
