@@ -11,3 +11,4 @@ requests==2.21.0
 urllib3==1.24.3
 Werkzeug==0.15.2
 ecdsa==0.13.2
+pycryptodome==3.8.2

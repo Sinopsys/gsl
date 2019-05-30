@@ -34,9 +34,6 @@ Write kupriyanovkirill@gmail.com, mephisto@openmail.cc, https://t.me/SsinopsysS,
 
 
 ### TODO
-* Add implementations of all algorithms
-* Find out about code licenses for algorithms to use
-* `argparse`
-* Arguments. init (initialize ledger in current dir), name (of the ledger), config (path to gsl's config),
+* In post_install do adding exportings to bashrc
 * Documentation, usage in README
 
