@@ -89,7 +89,7 @@ class Krinkle(object):
         print(f'{ASCIIColors.BACK_LIGHT_BLUE}THIS color indicates you will be provided with code or documentation for a particular algorithm BUT it will not be included in YOUR ledger code!{ASCIIColors.ENDS}')
         print(f'{ASCIIColors.BACK_BLUE}THIS color indicates that GSL will generate a working code for your ledger using a particular algorithm{ASCIIColors.ENDS}')
 
-    def prompt(self, name, path) -> dict:
+    def prompt(self, name, path=None) -> dict:
         """
         Prompts user to choose algorithms that will be used in a ledger
         : returns : dict
@@ -252,7 +252,9 @@ def main() -> None:
     __logger__.info('Start Goodsteel Ledger: a program for generating distributed ledgers')
     config_path = DEFAULT_CONFIG_PATH
     kr = Krinkle(config_path)
-    options = kr.prompt(name=args.NAME, path=args.PATH)
+    if args.PATH is None:
+        path = kr.config.get('init_dir', '')
+    options = kr.prompt(name=args.NAME, path=path)
     __logger__.info('Start getting your ledger\'s algorithms')
     time.sleep(0.5)
     try:
@@ -262,7 +264,7 @@ def main() -> None:
             t = False
     except:
         t = False
-    jq = Jarquai(options, args.NAME, args.PATH, t)
+    jq = Jarquai(options, args.NAME, path, t)
     jq.build_ledger()
 
 
