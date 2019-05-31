@@ -31,7 +31,7 @@ Then, to successfully launch app, it is needed to have a config with path
 put to that path.
 
 Example `config.yaml`:
-```
+```yaml
 # Key init_dir is path where your blockchain will be stored.
 #
 init_dir: /tmp/gsl
@@ -39,8 +39,8 @@ init_dir: /tmp/gsl
 
 ## Usage
 
-```
-$    gsl --init --name NAME [--path PATH] # path can also be taken from config.
+```bash
+gsl --init --name NAME [--path PATH] # path can also be taken from config.
 ```
 
 ## Questions
