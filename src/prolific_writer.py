@@ -41,7 +41,7 @@ class ProlificWriter(object):
             os.system('sed -ir "0,/def _profd/{s/_profd = .*/_profd = True/}" ' + os.path.join(self.path, name))
 
     def _get_src_path_(self):
-        path = sys.path
+        path = sys.path[::-1]
         for p in path:
             if 'gsl/src' in p:
                 return p

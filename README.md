@@ -11,7 +11,7 @@ Execute following commands linebyline
 ```bash
 git clone https://github.com/Sinopsys/gsl.git
 cd gsl
-export PYTHONPATH=$PYTHONPATH"$(pwd)/src"
+export PYTHONPATH=$PYTHONPATH":$(pwd)/src"
 [[ $PATH != *".local/bin"* ]] && export PATH=$PATH":/home/$USER/.local/bin"
 echo "mkdir /tmp/gsl" && mkdir /tmp/gsl
 echo "sudo mkdir /etc/gsl" && sudo mkdir /etc/gsl
@@ -36,6 +36,13 @@ Example `config.yaml`:
 #
 init_dir: /tmp/gsl
 ```
+
+If you encounter error like _ModuleNotFoundError: No module named 'goodsteel\_ledger'_ then firstly, `cd` into gsl directory and then run
+
+```bash
+export PYTHONPATH=$PYTHONPATH":$(pwd)/src"
+```
+
 
 ## Usage
 

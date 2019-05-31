@@ -167,13 +167,14 @@ def _sign_msg(private_key):
 
 def provide_options():
     response = None
-    while response not in ['1', '2', '3']:
+    while response not in ['1', '2', '3', '4']:
         response = input(
             """
             Which action would you like to take?
             1. Generate new wallet
             2. Send coins to another wallet
-            3. View transactions\n
+            3. View transactions
+            4. Quit wallet.py\n
             """)
     if response == '1':
         print("""=========================================\n
@@ -191,8 +192,11 @@ IMPORTANT: save this credentials or you won't be able to recover your wallet\n
         response = input('y/n\n')
         if response.lower() == 'y':
             _perform_transaction(addr_from, private_key, addr_to, amount)
-    else:
+    elif response == '3':
         check_transactions()
+    else:
+        print('Good bye!')
+        sys.exit(0)
 
 
 if __name__ == '__main__':
@@ -207,6 +211,7 @@ if __name__ == '__main__':
     torepeat = input('Repeat? Would you like one more action? (Y/[N])')
     while torepeat.lower() in ['y', 'yes', 'da']:
         provide_options()
+        torepeat = input('Repeat? Would you like one more action? (Y/[N])')
     print('Exiting..')
 
 # EOF
