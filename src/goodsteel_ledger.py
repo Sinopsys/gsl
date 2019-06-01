@@ -170,7 +170,7 @@ class Krinkle(object):
         if input('\nProceed with this config? [YES]/NO:').lower() in ['', 'yes', 'y', 'ye']:
             return chosen_to_print
         else:
-            self.prompt()
+            self.prompt(name, path)
 
 
 class Jarquai(object):
