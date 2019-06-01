@@ -47,6 +47,7 @@ export PYTHONPATH=$PYTHONPATH":$(pwd)/src"
 
 
 ## Usage
+_Tip: before usage make a `git pull`_
 
 ```bash
 gsl --init --name NAME [--path PATH] # path can also be taken from config.
