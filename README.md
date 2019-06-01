@@ -6,6 +6,8 @@
 
 gsl -- Goodsteel ledger. Krinkle Goodsteel will help you to build your own distributed ledger.
 
+Build and use with Python3.6.X+ interpreter.
+
 ## Installation
 Execute following commands linebyline
 ```bash
