@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.6
 """This is going to be your wallet. Here you can do several things:
 - Generate a new address (public and private key). You are going
 to use this address (public key) to send or receive any transactions. You can

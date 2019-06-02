@@ -39,6 +39,7 @@ class ProlificWriter(object):
             os.system('sed -ir "0,/def _timed/{s/_timed = .*/_timed = True/}" ' + os.path.join(self.path, name))
         if self.profd:
             os.system('sed -ir "0,/def _profd/{s/_profd = .*/_profd = True/}" ' + os.path.join(self.path, name))
+        subprocess.call(['chmod', '0764', os.path.join(self.path, name)])
 
     def _get_src_path_(self):
         path = sys.path[::-1]

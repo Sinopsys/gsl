@@ -170,7 +170,7 @@ class Krinkle(object):
         if input('\nProceed with this config? [YES]/NO:').lower() in ['', 'yes', 'y', 'ye']:
             return chosen_to_print
         else:
-            self.prompt(name, path)
+            return self.prompt(name, path)
 
 
 class Jarquai(object):
@@ -254,7 +254,11 @@ def main() -> None:
     kr = Krinkle(config_path)
     if args.PATH is None:
         path = kr.config.get('init_dir', '')
-    options = kr.prompt(name=args.NAME, path=path)
+    try:
+        options = kr.prompt(name=args.NAME, path=path)
+    except Exception:
+        __logger__.error('Wrong choose.')
+        sys.exit(0)
     __logger__.info('Start getting your ledger\'s algorithms')
     time.sleep(0.5)
     try:
