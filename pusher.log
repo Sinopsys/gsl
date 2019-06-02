@@ -108,3 +108,14 @@ hint: to the same ref. You may want to first integrate the remote changes
 hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 Sun Jun 2 21:00:01 MSK 2019
+[master 7117222] Update algorithms: 02_06_2019.
+ 2 files changed, 29 insertions(+)
+To git@github.com:Sinopsys/gsl.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'git@github.com:Sinopsys/gsl.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+Sun Jun 2 22:32:45 MSK 2019
