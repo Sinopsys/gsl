@@ -154,3 +154,9 @@ Sat Jun 8 21:00:01 MSK 2019
 To git@github.com:Sinopsys/gsl.git
    75ad9e2..0f944f4  master -> master
 Sun Jun 9 21:00:01 MSK 2019
+[master 38c4815] Update algorithms: 09_06_2019.
+ 3 files changed, 31 insertions(+)
+ create mode 100644 src/algoritms/hashing/pycryptodome/.circleci/config.yml
+To git@github.com:Sinopsys/gsl.git
+   0f944f4..38c4815  master -> master
+Mon Jun 10 21:00:01 MSK 2019
