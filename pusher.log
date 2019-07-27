@@ -390,3 +390,8 @@ Thu Jul 25 21:00:01 MSK 2019
 To git@github.com:Sinopsys/gsl.git
    bb077fc..1c2cce3  master -> master
 Fri Jul 26 21:00:01 MSK 2019
+[master 39022bf] Update algorithms: 26_07_2019.
+ 2 files changed, 23 insertions(+)
+To git@github.com:Sinopsys/gsl.git
+   1c2cce3..39022bf  master -> master
+Sat Jul 27 21:00:01 MSK 2019
